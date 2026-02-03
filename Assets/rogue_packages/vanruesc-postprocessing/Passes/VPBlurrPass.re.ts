@@ -1,0 +1,70 @@
+import * as RE from 'rogue-engine';
+import { KawaseBlurPass } from 'postprocessing';
+import VPEffectComposer from '../VPEffectComposer.re';
+
+@RE.registerComponent
+export default class VPBlurrPass extends RE.Component {
+  pass: KawaseBlurPass;
+
+  @VPEffectComposer.require()
+  effectComposer: VPEffectComposer;
+
+  private _scale = 1;
+  private _resolution = 2;
+  private _kernelSize = 2;
+
+  @RE.props.num()
+  get scale() {
+    return this._scale;
+  }
+
+  set scale(value: number) {
+    this._scale = value;
+    this.pass && (this.pass.scale = value);
+  }
+
+  @RE.props.select()
+  get resolution() {
+    return this._resolution;
+  }
+
+  set resolution(value: number) {
+    value = Number(value);
+    const res = Number(this.resolutionOptions[value])
+    this._resolution = value;
+    this.pass && (this.pass.resolution.height = res);
+  }
+
+  resolutionOptions = ["240", "360", "480", "720", "1080"];
+
+  @RE.props.select()
+  get kernelSize() {
+    return this._kernelSize;
+  }
+
+  set kernelSize(value: number) {
+    value = Number(value);
+    this._kernelSize = value;
+    this.pass && (this.pass.kernelSize = value);
+  }
+
+  kernelSizeOptions = [
+    "VERY_SMALL",
+    "SMALL",
+    "MEDIUM",
+    "LARGE",
+    "VERY_LARGE",
+    "HUGE",
+  ];
+
+  start() {
+    if (!this.effectComposer) return;
+
+    this.pass = new KawaseBlurPass();
+    this.pass.scale = this.scale;
+    this.pass.resolution.height = Number(this.resolutionOptions[this.resolution]);
+    this.pass.kernelSize = this.kernelSize;
+
+    this.effectComposer.effectComposer.addPass(this.pass);
+  }
+}
