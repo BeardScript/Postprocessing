@@ -3,7 +3,7 @@ import { EffectComposer, RenderPass } from 'postprocessing';
 import * as THREE from 'three';
 
 @RE.registerComponent
-export default class VPEffectComposer extends RE.Component {
+export default class FXComposer extends RE.Component {
   effectComposer: EffectComposer;
   renderPass: RenderPass;
 
@@ -20,5 +20,17 @@ export default class VPEffectComposer extends RE.Component {
 
   render = () => {
     this.effectComposer.render(RE.Runtime.deltaTime);
+  }
+
+  clear() {
+    RE.Runtime.renderFunc = RE.Runtime.defaultRenderFunc;
+  }
+
+  onBeforeRemoved(): void {
+    this.clear();
+  }
+
+  onDisabled(): void {
+    this.clear();
   }
 }

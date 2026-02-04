@@ -1,17 +1,17 @@
 import * as RE from 'rogue-engine';
 import { KawaseBlurPass } from 'postprocessing';
-import VPEffectComposer from '../VPEffectComposer.re';
+import FXComposer from '../FXComposer.re';
 
 @RE.registerComponent
-export default class VPBlurrPass extends RE.Component {
+export default class BlurrFX extends RE.Component {
   pass: KawaseBlurPass;
 
-  @VPEffectComposer.require()
-  effectComposer: VPEffectComposer;
+  @FXComposer.require()
+  effectComposer: FXComposer;
 
-  private _scale = 1;
-  private _resolution = 2;
-  private _kernelSize = 2;
+  protected _scale = 1;
+  protected _resolution = 2;
+  protected _kernelSize = 2;
 
   @RE.props.num()
   get scale() {
@@ -66,5 +66,18 @@ export default class VPBlurrPass extends RE.Component {
     this.pass.kernelSize = this.kernelSize;
 
     this.effectComposer.effectComposer.addPass(this.pass);
+  }
+
+  clear() {
+    this.effectComposer.effectComposer.removePass(this.pass);
+    this.pass.dispose();
+  }
+
+  onBeforeRemoved() {
+    this.clear();
+  }
+
+  onDisabled() {
+    this.clear();
   }
 }
