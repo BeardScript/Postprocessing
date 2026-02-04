@@ -68,6 +68,12 @@ export default class BlurrFX extends RE.Component {
     this.effectComposer.effectComposer.addPass(this.pass);
   }
 
+  update() {
+    if (RE.Runtime.camera !== this.pass.mainCamera) {
+      this.pass.mainCamera = RE.Runtime.camera;
+    }
+  }
+
   clear() {
     this.effectComposer.effectComposer.removePass(this.pass);
     this.pass.dispose();

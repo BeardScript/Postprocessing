@@ -1,14 +1,11 @@
 import * as RE from 'rogue-engine';
 import { EffectPass, BloomEffect, BlendFunction, KernelSize, SelectiveBloomEffect } from 'postprocessing';
 import FXComposer from '../FXComposer.re';
+import BaseFX from '../BaseFX.re';
 
 @RE.registerComponent
-export default class BloomFX extends RE.Component {
+export default class BloomFX extends BaseFX {
   effect: BloomEffect;
-  effectPass: EffectPass;
-
-  @FXComposer.require()
-  effectComposer: FXComposer;
 
   protected _intensity = 3;
   @RE.props.num(0, 10)
@@ -102,7 +99,6 @@ export default class BloomFX extends RE.Component {
     "HUGE",
   ];
 
-
   protected _blendMode: BlendFunction = 2;
   @RE.props.select()
   get blendMode() {
@@ -136,18 +132,5 @@ export default class BloomFX extends RE.Component {
 
     this.effectPass = new EffectPass(RE.Runtime.camera, this.effect);
     this.effectComposer.effectComposer.addPass(this.effectPass);
-  }
-
-  clear() {
-    this.effectComposer.effectComposer.removePass(this.effectPass);
-    this.effectPass.dispose();
-  }
-
-  onBeforeRemoved() {
-    this.clear();
-  }
-
-  onDisabled() {
-    this.clear();
   }
 }

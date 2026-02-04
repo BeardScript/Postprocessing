@@ -1,14 +1,11 @@
 import * as RE from 'rogue-engine';
 import FXComposer from '../FXComposer.re';
 import { BlendFunction, DepthOfFieldEffect, EffectPass, KernelSize } from 'postprocessing';
+import BaseFX from '../BaseFX.re';
 
 @RE.registerComponent
-export default class DepthOfFieldFX extends RE.Component {
+export default class DepthOfFieldFX extends BaseFX {
   effect: DepthOfFieldEffect;
-  effectPass: EffectPass;
-
-  @FXComposer.require()
-  effectComposer: FXComposer;
 
   protected _focusDistance = 3.1;
   @RE.props.num(0, 15)
@@ -72,18 +69,5 @@ export default class DepthOfFieldFX extends RE.Component {
 
     this.effectPass = new EffectPass(RE.Runtime.camera, this.effect);
     this.effectComposer.effectComposer.addPass(this.effectPass);
-  }
-
-  clear() {
-    this.effectComposer.effectComposer.removePass(this.effectPass);
-    this.effectPass.dispose();
-  }
-
-  onBeforeRemoved() {
-    this.clear();
-  }
-
-  onDisabled() {
-    this.clear();
   }
 }

@@ -18,6 +18,12 @@ export default class FXComposer extends RE.Component {
     this.effectComposer.addPass(this.renderPass);
   }
 
+  update() {
+    if (RE.Runtime.camera !== this.renderPass.mainCamera) {
+      this.renderPass.mainCamera = RE.Runtime.camera;
+    }
+  }
+
   render = () => {
     this.effectComposer.render(RE.Runtime.deltaTime);
   }
