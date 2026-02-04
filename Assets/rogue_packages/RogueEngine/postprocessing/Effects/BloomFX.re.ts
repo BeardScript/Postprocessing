@@ -4,7 +4,7 @@ import FXComposer from '../FXComposer.re';
 
 @RE.registerComponent
 export default class BloomFX extends RE.Component {
-  effect: SelectiveBloomEffect;
+  effect: BloomEffect;
   effectPass: EffectPass;
 
   @FXComposer.require()
@@ -120,7 +120,7 @@ export default class BloomFX extends RE.Component {
   start() {
     if (!this.effectComposer) return;
 
-    this.effect = new SelectiveBloomEffect(RE.Runtime.scene, RE.Runtime.camera, {
+    this.effect = new BloomEffect({
       blendFunction: this._blendMode,
       luminanceThreshold: this._threshold,
 			luminanceSmoothing: this._smoothing,
